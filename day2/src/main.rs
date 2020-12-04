@@ -9,6 +9,15 @@ fn validate_password(min: usize, max: usize, letter: char, password: String) -> 
     return false
 }
 
+fn validate_toboggan_password(poso: usize, post: usize, letter: char, password: String) -> bool {
+    let posoc = password.chars().nth(poso - 1).expect("Position One character does not exist");
+    let postc = password.chars().nth(post - 1).expect("Position Two character does not exist");
+    if (posoc == letter || postc == letter) && !(posoc == letter && postc == letter) {
+        return true
+    }
+    return false;
+}
+
 fn parse_line(line: String) -> Option<(usize, usize, char, String)> {
     // Split by space into parts
     let line_split: Vec<&str> = line.split_whitespace().collect();
@@ -69,4 +78,18 @@ fn main() {
     }
 
     println!("Found {:?} valid passwords", num_valid);
+
+    num_valid = 0;
+
+    for line in in_data.iter() {
+        match parse_line(line.to_string()) {
+            Some(l) => {
+                if validate_toboggan_password(l.0, l.1, l.2, l.3) {
+                    num_valid = num_valid + 1;
+                }
+            },
+            None => panic!("There was an error parsing the line {:?}", line),
+        };
+    }
+    println!("Found {:?} valid passwords (part 2)", num_valid);
 }
